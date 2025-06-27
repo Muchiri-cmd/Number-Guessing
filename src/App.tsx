@@ -99,10 +99,12 @@ const App = () => {
           <div></div>
           <button
             disabled={gameState.newGameButtonDisabled}
-            onClick={() =>
+            onClick={() => {
               dispatch({
                 type: "NEW_GAME",
               })
+              setPlayerGuess("")
+            }
             }
             className="new-game-btn"
           >

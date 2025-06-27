@@ -1,4 +1,5 @@
 import { useReducer, useState } from "react";
+import "./App.css";
 
 interface GameStates {
   newGameButtonDisabled: boolean;
@@ -71,7 +72,7 @@ const gameReducer = (state: GameStates, action: GameActions): GameStates => {
     if (guessedNumber < state.secretNumber) {
       return {
         ...state,
-        result: `${guessedNumber} is greater than the secret number`,
+        result: `${guessedNumber} is less than the secret number`,
         numberOfTries: state.numberOfTries - 1,
       };
     }
@@ -91,39 +92,50 @@ const App = () => {
   });
 
   return (
-    <div>
+    <div className="main-container">
       <h1>Number Guessing Game</h1>
-      <h2>{gameState.numberOfTries} Trials Remaining</h2>
+      <div className="game-card">
+        <div className="header">
+          <div></div>
+          <button
+            disabled={gameState.newGameButtonDisabled}
+            onClick={() =>
+              dispatch({
+                type: "NEW_GAME",
+              })
+            }
+            className="new-game-btn"
+          >
+            New Game
+          </button>
+        </div>
+        <div className="game-card-header">
+          <h2>Guess a number between 0 - 100</h2>
+          <h2>{gameState.numberOfTries} Trials Remaining</h2>
+        </div>
+        <input
+          type="number"
+          placeholder="Guess a number (0-100)"
+          readOnly={gameState.inputReadOnly}
+          value={playerGuess}
+          onChange={(e) => setPlayerGuess(e.target.value)}
+          required
+        />
 
-      <input
-        type="number"
-        placeholder="Guess a number (0-100)"
-        readOnly={gameState.inputReadOnly}
-        value={playerGuess}
-        onChange={(e) => setPlayerGuess(e.target.value)}
-      />
-      <button
-        disabled={gameState.newGameButtonDisabled}
-        onClick={() =>
-          dispatch({
-            type: "NEW_GAME",
-          })
-        }
-      >
-        New Game
-      </button>
-      {gameState.result && <p>{gameState.result}</p>}
-      <button
-        disabled={gameState.guessButtonDisabled}
-        onClick={() =>
-          dispatch({
-            type: "GUESS",
-            payload: Number(playerGuess),
-          })
-        }
-      >
-        Guess
-      </button>
+        {gameState.result && <p>{gameState.result}</p>}
+        <button
+          className="guess-btn"
+          disabled={gameState.guessButtonDisabled}
+          onClick={() =>
+            dispatch({
+              type: "GUESS",
+              payload: Number(playerGuess),
+            })
+          }
+        >
+          Guess
+        </button>
+      </div>
     </div>
   );
 };
